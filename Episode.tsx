@@ -3,6 +3,7 @@ import tailwind from "tailwind-rn";
 import { formatDate, formatTimeSecs } from "./helpers";
 import { IconSpeaker } from "./Icons";
 import { EpisodeModel } from "./App";
+import { AppText } from "./AppText";
 
 interface EpisodeProps {
   episode: EpisodeModel;
@@ -44,22 +45,25 @@ export function Episode({ episode, onPlay, playing = false }: EpisodeProps) {
         )}
       </View>
       <View style={tailwind("ml-3")}>
-        <Text
+        <AppText
+          weight="bold"
           style={[
-            tailwind("font-bold text-base"),
+            tailwind("text-base"),
             playing && tailwind("text-indigo-600"),
           ]}
         >
           {episode.name}
-        </Text>
+        </AppText>
         <View style={tailwind("flex-row")}>
-          <Text style={tailwind("text-sm text-gray-700")}>
+          <AppText style={tailwind("text-sm text-gray-700")}>
             {formatDate(episode.created_time)}
-          </Text>
-          <Text style={tailwind("text-sm text-gray-700 mx-1")}>&bull;</Text>
-          <Text style={tailwind("text-sm text-gray-700")}>
+          </AppText>
+          <AppText style={tailwind("text-sm text-gray-700 mx-1")}>
+            &bull;
+          </AppText>
+          <AppText style={tailwind("text-sm text-gray-700")}>
             {formatTimeSecs(episode.duration)}
-          </Text>
+          </AppText>
         </View>
       </View>
     </Pressable>

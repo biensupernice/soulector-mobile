@@ -1,7 +1,17 @@
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import tailwind from "tailwind-rn";
 import { Episode } from "./Episode";
+import {
+  useFonts,
+  SpaceGrotesk_300Light,
+  SpaceGrotesk_400Regular,
+  SpaceGrotesk_500Medium,
+  SpaceGrotesk_600SemiBold,
+  SpaceGrotesk_700Bold,
+} from "@expo-google-fonts/space-grotesk";
+import AppLoading from "expo-app-loading";
+import { AppText } from "./AppText";
 
 const testTrack = {
   _id: "61b94a4bfc77053f649305a3",
@@ -18,30 +28,44 @@ const testTrack = {
 export type EpisodeModel = typeof testTrack;
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    SpaceGrotesk_300Light,
+    SpaceGrotesk_400Regular,
+    SpaceGrotesk_500Medium,
+    SpaceGrotesk_600SemiBold,
+    SpaceGrotesk_700Bold,
+  });
+
   function onPlay(track: EpisodeModel) {
     alert(`onPlay ${track.name}`);
   }
 
   return (
     <>
-      <StatusBar style="auto" />
-      <SafeAreaView style={tailwind("flex h-full")}>
-        <View style={tailwind("pt-12 pb-4 px-4 items-start bg-gray-900")}>
-          <Text style={tailwind("text-white text-lg font-bold")}>
-            Soulector
-          </Text>
-        </View>
-        <View style={tailwind("h-full pt-4")}>
-          <Episode onPlay={() => onPlay(testTrack)} episode={testTrack} />
-          <Episode
-            onPlay={() => onPlay(testTrack)}
-            playing
-            episode={testTrack}
-          />
-          <Episode onPlay={() => onPlay(testTrack)} episode={testTrack} />
-          <Episode onPlay={() => onPlay(testTrack)} episode={testTrack} />
-        </View>
-      </SafeAreaView>
+      {!fontsLoaded ? (
+        <AppLoading />
+      ) : (
+        <>
+          <StatusBar style="auto" />
+          <SafeAreaView style={tailwind("flex h-full")}>
+            <View style={tailwind("pt-12 pb-4 px-4 items-start bg-gray-900")}>
+              <AppText weight="bold" style={tailwind("text-white text-lg")}>
+                Soulector
+              </AppText>
+            </View>
+            <View style={tailwind("h-full pt-4")}>
+              <Episode onPlay={() => onPlay(testTrack)} episode={testTrack} />
+              <Episode
+                onPlay={() => onPlay(testTrack)}
+                playing
+                episode={testTrack}
+              />
+              <Episode onPlay={() => onPlay(testTrack)} episode={testTrack} />
+              <Episode onPlay={() => onPlay(testTrack)} episode={testTrack} />
+            </View>
+          </SafeAreaView>
+        </>
+      )}
     </>
   );
 }
