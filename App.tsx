@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, View, StatusBar as NativeStatusBar } from "react-native";
 import tailwind from "tailwind-rn";
 import { Episode } from "./Episode";
 import {
@@ -40,17 +40,25 @@ export default function App() {
     alert(`onPlay ${track.name}`);
   }
 
+  const statusBarHeight = NativeStatusBar.currentHeight ?? 0;
+  const offset = statusBarHeight + 16;
+
   return (
     <>
       {!fontsLoaded ? (
         <AppLoading />
       ) : (
         <>
-          <StatusBar style="auto" />
+          <StatusBar style="light" />
           <SafeAreaView style={tailwind("flex h-full")}>
-            <View style={tailwind("pt-12 pb-4 px-4 items-start bg-gray-900")}>
+            <View
+              style={[
+                { paddingTop: offset },
+                tailwind("pb-4 px-4 items-start bg-gray-900"),
+              ]}
+            >
               <AppText weight="bold" style={tailwind("text-white text-lg")}>
-                Soulector
+                Soulection
               </AppText>
             </View>
             <View style={tailwind("h-full pt-4")}>
