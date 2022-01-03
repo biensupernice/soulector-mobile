@@ -54,7 +54,7 @@ export default function App() {
             <View
               style={[
                 { paddingTop: offset },
-                tailwind("pb-4 px-4 items-start bg-gray-900"),
+                tailwind("pb-4 px-4 items-start bg-black"),
               ]}
             >
               <AppText weight="bold" style={tailwind("text-white text-lg")}>
