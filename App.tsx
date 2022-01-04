@@ -24,8 +24,12 @@ import { SoulectionLogo } from "./Icons";
 export const queryClient = new QueryClient();
 const apiClient = createApiClient();
 
-export default function App() {
-  let [fontsLoaded] = useFonts({
+function useEpisodes() {
+  return useQuery("episodes", () => apiClient.getEpisodes());
+}
+
+function useAppStartup() {
+  const [fontsLoaded] = useFonts({
     SpaceGrotesk_300Light,
     SpaceGrotesk_400Regular,
     SpaceGrotesk_500Medium,
@@ -33,12 +37,28 @@ export default function App() {
     SpaceGrotesk_700Bold,
   });
 
+  const { isLoading } = useEpisodes();
+
+  return {
+    loading: isLoading || !fontsLoaded,
+  };
+}
+
+function AppWrapper() {
+  const { loading } = useAppStartup();
+
+  if (loading) {
+    return <AppLoading />;
+  }
+
+  return <EpisodeScreen />;
+}
+
+export default function App() {
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        {!fontsLoaded ? <AppLoading /> : <EpisodeScreen />}
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <AppWrapper />
+    </QueryClientProvider>
   );
 }
 
@@ -50,35 +70,25 @@ function EpisodeScreen() {
   const statusBarHeight = NativeStatusBar.currentHeight ?? 0;
   const offset = statusBarHeight + 16;
 
-  // Queries
-  const {
-    isLoading,
-    data: episodes,
-    error,
-  } = useQuery("episodes", async () => await apiClient.getEpisodes());
+  const { isLoading, data: episodes, error } = useEpisodes();
 
   return isLoading ? (
-    <AppLoading />
+    <></>
   ) : (
-    <>
-      <SafeAreaView style={tailwind("flex h-full")}>
-        <AppBar offset={offset} />
-        {episodes && (
-          <FlatList
-            style={tailwind("h-full pt-2 pb-10 flex-1")}
-            contentContainerStyle={tailwind("pb-4")}
-            data={episodes}
-            renderItem={(epItem) => (
-              <Episode
-                onPlay={() => onPlay(epItem.item)}
-                episode={epItem.item}
-              />
-            )}
-            keyExtractor={(ep) => ep._id}
-          />
-        )}
-      </SafeAreaView>
-    </>
+    <SafeAreaView style={tailwind("flex h-full")}>
+      <AppBar offset={offset} />
+      {episodes && (
+        <FlatList
+          style={tailwind("h-full pt-2 pb-10 flex-1")}
+          contentContainerStyle={tailwind("pb-4")}
+          data={episodes}
+          renderItem={(epItem) => (
+            <Episode onPlay={() => onPlay(epItem.item)} episode={epItem.item} />
+          )}
+          keyExtractor={(ep) => ep._id}
+        />
+      )}
+    </SafeAreaView>
   );
 }
 
