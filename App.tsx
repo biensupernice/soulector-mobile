@@ -20,6 +20,7 @@ import { AppText } from "./AppText";
 import { useQuery, QueryClient, QueryClientProvider } from "react-query";
 import { createApiClient, EpisodeDTO } from "./apiClient";
 import { SoulectionLogo } from "./Icons";
+import * as Linking from "expo-linking";
 
 export const queryClient = new QueryClient();
 const apiClient = createApiClient();
@@ -64,7 +65,7 @@ export default function App() {
 
 function EpisodeScreen() {
   function onPlay(track: EpisodeDTO) {
-    alert(`onPlay ${track.name}`);
+    Linking.openURL(track.url);
   }
 
   const statusBarHeight = NativeStatusBar.currentHeight ?? 0;
