@@ -89,6 +89,7 @@ function EpisodeScreen() {
       {episodes && (
         <>
           <FlatList
+            ListHeaderComponent={<BeforeList numEpisodes={episodes.length} />}
             style={tailwind("h-full pt-2 pb-10 flex-1")}
             contentContainerStyle={tailwind("pb-4")}
             data={episodes}
@@ -103,7 +104,7 @@ function EpisodeScreen() {
           <View
             style={[
               tailwind(
-                "absolute bg-transparent right-0 bottom-0 mb-8 mr-5 z-10"
+                "absolute bg-transparent right-0 bottom-0 mb-8 mr-4 z-10"
               ),
             ]}
           >
@@ -112,6 +113,27 @@ function EpisodeScreen() {
         </>
       )}
     </SafeAreaView>
+  );
+}
+
+interface BeforeListProps {
+  numEpisodes: number;
+  filterText?: string;
+}
+function BeforeList({ numEpisodes, filterText }: BeforeListProps) {
+  return (
+    <View
+      style={tailwind(
+        "px-4 flex flex-row items-center justify-between py-2"
+      )}
+    >
+      <AppText weight="semiBold" style={tailwind("text-base text-indigo-900")}>
+        {filterText ? `Episodes matching "${filterText}"` : "All Episodes"}
+      </AppText>
+      <AppText weight="semiBold" style={tailwind("text-base text-gray-600")}>
+        {numEpisodes} Total
+      </AppText>
+    </View>
   );
 }
 
