@@ -13,11 +13,15 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "LSApplicationQueriesSchemes": ["soundcloud"]
+        "LSApplicationQueriesSchemes": [
+          "soundcloud"
+        ]
       }
     },
     "android": {
@@ -28,6 +32,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/biensupernice/soulector-mobile"
   }
 }
