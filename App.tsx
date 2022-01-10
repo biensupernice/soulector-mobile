@@ -20,6 +20,8 @@ import { AppText } from "./AppText";
 import { useQuery, QueryClient, QueryClientProvider } from "react-query";
 import { createApiClient, EpisodeDTO } from "./apiClient";
 import { SoulectionLogo } from "./Icons";
+import * as Linking from "expo-linking";
+import { ShuffleButton } from "./SuffleButton";
 
 export const queryClient = new QueryClient();
 const apiClient = createApiClient();
@@ -64,7 +66,7 @@ export default function App() {
 
 function EpisodeScreen() {
   function onPlay(track: EpisodeDTO) {
-    alert(`onPlay ${track.name}`);
+    Linking.openURL(track.url);
   }
 
   const statusBarHeight = NativeStatusBar.currentHeight ?? 0;
@@ -72,23 +74,66 @@ function EpisodeScreen() {
 
   const { isLoading, data: episodes, error } = useEpisodes();
 
+  function onRandomClick() {
+    if (episodes) {
+      const randomIndex = Math.floor(Math.random() * episodes.length);
+      onPlay(episodes[randomIndex]);
+    }
+  }
+
   return isLoading ? (
     <></>
   ) : (
-    <SafeAreaView style={tailwind("flex h-full")}>
+    <SafeAreaView style={tailwind("flex h-full bg-white relative")}>
       <AppBar offset={offset} />
       {episodes && (
-        <FlatList
-          style={tailwind("h-full pt-2 pb-10 flex-1")}
-          contentContainerStyle={tailwind("pb-4")}
-          data={episodes}
-          renderItem={(epItem) => (
-            <Episode onPlay={() => onPlay(epItem.item)} episode={epItem.item} />
-          )}
-          keyExtractor={(ep) => ep._id}
-        />
+        <>
+          <FlatList
+            ListHeaderComponent={<BeforeList numEpisodes={episodes.length} />}
+            style={tailwind("h-full pt-2 pb-10 flex-1")}
+            contentContainerStyle={tailwind("pb-4")}
+            data={episodes}
+            renderItem={(epItem) => (
+              <Episode
+                onPlay={() => onPlay(epItem.item)}
+                episode={epItem.item}
+              />
+            )}
+            keyExtractor={(ep) => ep._id}
+          />
+          <View
+            style={[
+              tailwind(
+                "absolute bg-transparent right-0 bottom-0 mb-8 mr-4 z-10"
+              ),
+            ]}
+          >
+            <ShuffleButton onClick={onRandomClick} />
+          </View>
+        </>
       )}
     </SafeAreaView>
+  );
+}
+
+interface BeforeListProps {
+  numEpisodes: number;
+  filterText?: string;
+}
+function BeforeList({ numEpisodes, filterText }: BeforeListProps) {
+  return (
+    <View
+      style={tailwind(
+        "px-4 flex flex-row items-center justify-between py-2"
+      )}
+    >
+      <AppText weight="semiBold" style={tailwind("text-base text-indigo-900")}>
+        {filterText ? `Episodes matching "${filterText}"` : "All Episodes"}
+      </AppText>
+      <AppText weight="semiBold" style={tailwind("text-base text-gray-600")}>
+        {numEpisodes} Total
+      </AppText>
+    </View>
   );
 }
 
