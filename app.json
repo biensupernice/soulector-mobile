@@ -22,13 +22,15 @@
         "LSApplicationQueriesSchemes": [
           "soundcloud"
         ]
-      }
+      },
+      "bundleIdentifier": "dev.jalvarado.soulector"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "dev.jalvarado.soulector"
     },
     "web": {
       "favicon": "./assets/favicon.png"
